@@ -1,247 +1,153 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Risparmio Amazon</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-/* VOICE: sala controllo personale, asciutta, numeri prima di tutto
-   IDEA: il quadro strumenti di una centralina: una lettura grande, spie sottili accanto
-   PICTURE: il contatore del risparmio annuo con le strisce-spia di cashback, Prime, promo, iscrizioni
-   COLOUR and TYPE: acciaio #d5dbe0, nero, bianco, rosso allarme #e8251a; notte #16191c; Inter Tight 600 + Inter
-   LAYOUT: lettura dominante al 40%, strisce impilate a destra, poi sezioni a tutta larghezza */
-:root{color-scheme:light dark;
---bg:light-dark(#d5dbe0,#16191c);--panel:light-dark(#ffffff,#1f2327);--ink:light-dark(#0b0d0f,#eef1f3);
---mute:light-dark(#4d5761,#9aa5ae);--line:light-dark(#b9c2ca,#30363c);--red:#e8251a;--ok:light-dark(#0b0d0f,#eef1f3);
---field:light-dark(#eef1f3,#14171a)}
-:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
-*{box-sizing:border-box;min-width:0}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
-h1,h2,.big{font-family:"Inter Tight",Inter,sans-serif;font-weight:600;letter-spacing:-.01em}
-h1{font-size:clamp(28px,4vw,40px);line-height:1.05;margin:0 0 6px;text-wrap:balance}
-h2{font-size:22px;margin:0 0 4px}
-.band{padding:clamp(20px,4vw,48px) max(4vw,16px)}
-.wrap{max-width:1240px;margin:0 auto}
-.sub{color:var(--mute);margin:0}
-.top{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:14px;margin-top:20px}
-.readout{background:#0b0d0f;color:#fff;border-radius:6px;padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:300px}
-.readout .lbl{color:#aab4bd;font-size:14px}
-.big{font-size:clamp(48px,8vw,84px);line-height:1;margin:10px 0;white-space:nowrap}
-.readout .split{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px solid #2c3238;padding-top:14px;font-size:14px;color:#cfd6dc}
-.readout .split b{display:block;color:#fff;font-size:18px;font-family:"Inter Tight",Inter,system-ui,sans-serif;white-space:nowrap}
-.strips{display:grid;gap:8px}
-.strip{background:var(--panel);border-radius:6px;padding:12px 16px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px;align-items:center}
-.strip .k{font-weight:600}.strip .v{font-family:"Inter Tight",Inter,system-ui,sans-serif;font-size:22px;white-space:nowrap;text-align:right}
-.strip .n{grid-column:1/-1;color:var(--mute);font-size:14px}
-.strip.alarm{box-shadow:inset 4px 0 0 var(--red)}.strip.alarm .v{color:var(--red)}
-.meter{grid-column:1/-1;height:6px;background:var(--field);border-radius:3px;overflow:hidden}
-.meter i{display:block;height:100%;background:var(--ink)}
-.sec{background:var(--panel);border-radius:6px;padding:20px;margin-top:14px}
-.sec header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:12px}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
-table{width:100%;border-collapse:collapse;font-size:15px}
-th{text-align:left;font-weight:500;color:var(--mute);font-size:13px;padding:6px 6px;border-bottom:1px solid var(--line)}
-td{padding:6px;border-bottom:1px solid var(--line);vertical-align:middle}
-td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--field);border:1px solid var(--line);border-radius:4px;padding:8px 10px;min-height:44px;width:100%}
-textarea{min-height:110px;font-size:13px;font-family:ui-monospace,monospace}
-input:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--red);outline-offset:1px}
-button{font:inherit;font-weight:600;min-height:44px;padding:0 16px;border-radius:4px;border:1px solid var(--ink);background:var(--ink);color:var(--panel);cursor:pointer}
-button.ghost{background:transparent;color:var(--ink)}
-button.x{background:transparent;color:var(--mute);border:0;min-width:44px;padding:0;font-size:20px}
-.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-top:12px;align-items:end}
-.form label{font-size:13px;color:var(--mute)}
-.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:10px;background:var(--field);white-space:nowrap}
-.tag.red{background:var(--red);color:#fff}
-.checks label{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
-.checks input{width:22px;min-height:22px;height:22px;margin-top:2px;flex:none;accent-color:var(--red)}
-.note{font-size:13px;color:var(--mute)}
-.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.done td{opacity:.5}
-pre,.scroll{overflow-x:auto}
-@media(max-width:860px){.top,.grid2{grid-template-columns:minmax(0,1fr)}.readout{min-height:0}}
-@media(max-width:600px){table{font-size:13px}.stack thead{display:none}.stack tr{display:grid;padding-block:10px;border-bottom:1px solid var(--line)}.stack td{display:flow-root;border:0;padding:3px 0;padding-inline-start:8em;text-align:start}.stack td::before{content:attr(data-l);float:inline-start;width:7.5em;margin-inline-start:-8em;white-space:normal;color:var(--mute)}.stack td:empty{display:none}.stack td input{min-height:40px}}
-@media(prefers-reduced-motion:no-preference){.meter i{transition:width .6s ease}}
-</style>
-<script>new MutationObserver(()=>{for(const c of document.querySelectorAll('.stack td:not([data-l])')){let i=0,p=c;while(p=p.previousElementSibling)i+=p.colSpan;c.dataset.l=c.closest('table').rows[0].cells[i]?.textContent||''}}).observe(document,{childList:true,subtree:true})</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Amazon Radar</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icons/icon-180.png?v=1">
+<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png?v=1">
+<meta name="theme-color" content="#000000" id="metaThemeColor">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" id="metaStatusBar">
+<meta name="apple-mobile-web-app-title" content="Radar">
+<script>
+// Tema e vetro applicati prima del primo disegno, senza lampi (logica completa in app.js)
+(function () {
+  var pref = 'auto', g = 'off';
+  try { pref = localStorage.getItem('ar_theme') || 'auto'; g = localStorage.getItem('ar_glass') || 'off'; } catch (e) {}
+  var light = pref === 'light' || (pref === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
+  var d = document.documentElement;
+  d.setAttribute('data-theme', light ? 'light' : 'dark');
+  if (g === 'on' || g === 'anim') d.classList.add('glass');
+  if (g === 'anim') d.classList.add('glass-anim');
+  if (light) { document.getElementById('metaThemeColor').setAttribute('content', '#f2f2f7'); document.getElementById('metaStatusBar').setAttribute('content', 'default'); }
+})();
+</script>
+<link rel="stylesheet" href="./tokens.css?v=1">
+<link rel="stylesheet" href="./style.css?v=1">
 </head>
 <body>
-<div class="band"><div class="wrap">
-  <h1 id="title">Risparmio Amazon</h1>
-  <p class="sub">Prime Giovani, cashback, Iscriviti e Risparmia e promo in un unico quadro. Le allerte prezzo arrivano dal bot Telegram.</p>
-  <p class="note" id="sampleNote">Dati di esempio: sostituiscili con i tuoi o <button class="ghost" id="clearSample" style="min-height:32px;padding:0 10px">svuota gli esempi</button></p>
+<div id="app">
+  <div class="wall-anim" aria-hidden="true"><i></i><i></i><i></i></div>
 
-  <div class="top">
-    <div class="readout">
-      <div><div class="lbl" id="yearLbl">Risparmiato quest'anno</div><div class="big" id="ytd">0 €</div>
-      <div class="lbl" id="ytdNote"></div></div>
-      <div class="split">
-        <div>Da sconti e deal<b id="ytdDeal">0 €</b></div>
-        <div>Da cashback<b id="ytdCb">0 €</b></div>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 15a8 8 0 0 1 16 0"/><path d="M8 15a4 4 0 0 1 8 0"/><path d="M12 15l4-5"/></svg></span>
+      <span>Amazon Radar</span>
+    </div>
+    <span class="topbar-sub" id="today"></span>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section class="page active" id="page-home" aria-label="Home">
+      <div class="card hero">
+        <div class="card-h"><span id="yearLbl">Risparmiato</span><button class="link" data-act="go" data-page="log">Registro</button></div>
+        <div class="hero-v num" id="ytd">0,00 €</div>
+        <div class="hero-sub" id="ytdSub"></div>
+        <div class="split">
+          <div><div class="kv-l">Da sconti</div><div class="kv-v num" id="ytdDeal">0,00 €</div></div>
+          <div><div class="kv-l">Da cashback</div><div class="kv-v num" id="ytdCb">0,00 €</div></div>
+        </div>
       </div>
-    </div>
-    <div class="strips" id="strips"></div>
-  </div>
-
-  <div class="sec">
-    <header><h2>Scadenze e promo</h2><span class="note">Ordinate per data. Spunta quando l'hai usata.</span></header>
-    <div class="scroll"><table class="stack" id="promoT"><thead><tr><th>Promo</th><th>Scade</th><th>Note</th><th></th><th></th></tr></thead><tbody></tbody></table></div>
-    <form class="form" id="promoF">
-      <div><label for="pN">Promo</label><input id="pN" required placeholder="Buono 5 € app"></div>
-      <div><label for="pD">Scadenza</label><input id="pD" type="date" required></div>
-      <div><label for="pNo">Note</label><input id="pNo" placeholder="codice, condizioni"></div>
-      <button>Aggiungi</button>
-    </form>
-  </div>
-
-  <div class="sec">
-    <header><h2>Iscriviti e Risparmia</h2><span class="note" id="subSum"></span></header>
-    <div class="scroll"><table class="stack" id="subT"><thead><tr><th>Prodotto</th><th class="num">Prezzo pieno €</th><th class="num">Sconto %</th><th class="num">Ogni mesi</th><th class="num">Spesa/anno</th><th class="num">Risparmio/anno</th><th></th></tr></thead><tbody></tbody></table></div>
-    <form class="form" id="subF">
-      <div><label for="sN">Prodotto</label><input id="sN" required placeholder="Detersivo"></div>
-      <div><label for="sP">Prezzo pieno €</label><input id="sP" type="number" step="0.01" min="0" required></div>
-      <div><label for="sD">Sconto %</label><input id="sD" type="number" min="0" max="50" value="5" required></div>
-      <div><label for="sE">Ogni quanti mesi</label><input id="sE" type="number" min="1" max="6" value="1" required></div>
-      <button>Aggiungi</button>
-    </form>
-    <p class="note">Lo sconto sale se raggruppi più prodotti nella stessa consegna: controlla la percentuale reale nella pagina "Gestisci iscrizioni" e aggiornala qui.</p>
-  </div>
-
-  <div class="sec">
-    <header><h2>Registro acquisti</h2><span class="note">Prezzo normale = media Keepa o prezzo di listino che avresti pagato.</span></header>
-    <div class="scroll"><table class="stack" id="logT"><thead><tr><th>Data</th><th>Prodotto</th><th class="num">Pagato</th><th class="num">Normale</th><th class="num">Cashback</th><th class="num">Risparmio</th><th></th></tr></thead><tbody></tbody></table></div>
-    <form class="form" id="logF">
-      <div><label for="lD">Data</label><input id="lD" type="date" required></div>
-      <div><label for="lI">Prodotto</label><input id="lI" required></div>
-      <div><label for="lP">Pagato €</label><input id="lP" type="number" step="0.01" min="0" required></div>
-      <div><label for="lN">Normale €</label><input id="lN" type="number" step="0.01" min="0" required></div>
-      <div><label for="lC">Cashback %</label><select id="lC"><option>0</option><option selected>5</option><option>10</option><option>20</option></select></div>
-      <button>Registra</button>
-    </form>
-  </div>
-
-  <div class="grid2">
-    <div class="sec checks">
-      <header><h2>Prima di comprare</h2><button class="ghost" id="resetChk" type="button">Azzera</button></header>
-      <div id="chk"></div>
-    </div>
-    <div class="sec">
-      <header><h2>Il tuo Prime Giovani</h2></header>
-      <div class="form" style="margin-top:0">
-        <div><label for="primeEnd">Fine Prime Giovani</label><input id="primeEnd" type="date"></div>
-        <div><label for="cbBal">Saldo cashback €</label><input id="cbBal" type="number" step="0.01" min="0"></div>
-        <div><label for="cbExp">Il credito scade il</label><input id="cbExp" type="date"></div>
-        <div><label for="cbCap">Tetto annuo cashback €</label><input id="cbCap" type="number" min="0" placeholder="dalle condizioni"></div>
+      <div class="tiles" id="tiles"></div>
+      <div class="card">
+        <div class="card-h"><span>Prezzi seguiti dal bot</span><span class="badge" id="watchCount">—</span></div>
+        <div class="list" id="watchList"></div>
+        <p class="note" id="watchNote">Tocca un prodotto per aprirlo su Amazon o su Keepa, dove puoi attivare l'avviso gratuito.</p>
       </div>
-      <p class="note">Data di fine e tetto li trovi nella pagina Prime e nelle condizioni del cashback. Il credito promozionale di solito scade: usalo prima.</p>
-      <h2 style="margin-top:18px">Backup</h2>
-      <p class="note">I dati restano solo in questo browser. Copia il backup ogni tanto; incollalo qui per ripristinare.</p>
-      <textarea id="bk" aria-label="Backup dati"></textarea>
-      <div class="row"><button type="button" id="cp">Copia backup</button><button type="button" class="ghost" id="imp">Importa</button><span class="note" id="bkMsg" role="status"></span></div>
-    </div>
-  </div>
-</div></div>
+      <div class="card">
+        <div class="card-h"><span>Prima di comprare</span><button class="link" data-act="resetChecks">Azzera</button></div>
+        <div id="checks"></div>
+      </div>
+    </section>
 
-<script>
-{
-const KEY='amazon-risparmio-v1', today=new Date(); today.setHours(0,0,0,0);
-const Y=today.getFullYear(), iso=d=>d.toISOString().slice(0,10);
-const plus=n=>{const d=new Date(today);d.setDate(d.getDate()+n);return iso(d)};
-const uid=()=>Math.random().toString(36).slice(2,9);
-const SAMPLE={sample:true,
- settings:{primeEnd:'',cbBal:12.4,cbExp:plus(40),cbCap:0},
- promos:[
-  {id:uid(),name:'Buono 10 € ritiro al punto Amazon',date:'2026-12-29',note:'Promo PRENDI10, solo clienti idonei, codici limitati',done:false},
-  {id:uid(),name:'Programma Punti Amazon (Amex)',date:'2026-05-31',note:'Verifica se è stato prorogato prima di richiedere la carta',done:false},
-  {id:uid(),name:'Usare il saldo cashback',date:plus(40),note:'Credito promozionale in scadenza',done:false}],
- subs:[
-  {id:uid(),name:'Capsule caffè 100 pz',price:24.9,disc:5,every:1},
-  {id:uid(),name:'Detersivo lavatrice',price:14.5,disc:5,every:2},
-  {id:uid(),name:'Rasoi ricambio',price:18,disc:5,every:3}],
- log:[
-  {id:uid(),date:plus(-20),item:'Cuffie bluetooth',paid:39.9,normal:59.9,cb:5},
-  {id:uid(),date:plus(-6),item:'Zaino',paid:32,normal:32,cb:10}],
- checks:{}};
-const EMPTY={sample:false,settings:{primeEnd:'',cbBal:0,cbExp:'',cbCap:0},promos:[],subs:[],log:[],checks:{}};
-let S; try{S=JSON.parse(localStorage.getItem(KEY))}catch(e){S=null}
-if(!S||!S.settings)S=structuredClone(SAMPLE);
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+    <!-- ISCRIZIONI -->
+    <section class="page" id="page-subs" aria-label="Iscrizioni">
+      <h1 class="page-title">Iscriviti e Risparmia</h1>
+      <div class="card">
+        <div class="grid2">
+          <div><div class="kv-l">Spesa al mese</div><div class="kv-v num" id="subMonth">0,00 €</div></div>
+          <div><div class="kv-l">Risparmio all'anno</div><div class="kv-v num" id="subSave" style="color:var(--accent)">0,00 €</div></div>
+        </div>
+        <p class="note">I prezzi cambiano: paghi quello del giorno di spedizione. Aggiornali quando arriva l'email prima della consegna.</p>
+      </div>
+      <div class="card">
+        <div class="card-h"><span id="subCount">Iscrizioni</span><button class="link" data-act="addSub">Aggiungi</button></div>
+        <div class="list" id="subList"></div>
+      </div>
+    </section>
 
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const eur=v=>(Number(v)||0).toLocaleString('it-IT',{style:'currency',currency:'EUR'});
-const days=s=>s?Math.round((new Date(s+'T00:00:00')-today)/864e5):null;
-const fdate=s=>s?new Date(s+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}):'—';
-const $=id=>document.getElementById(id);
+    <!-- ACQUISTI -->
+    <section class="page" id="page-log" aria-label="Acquisti">
+      <h1 class="page-title">Acquisti</h1>
+      <div class="card">
+        <div class="card-h"><span>Spesa per mese</span><span class="badge" id="monthTot">—</span></div>
+        <div class="bars" id="bars"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span>Registro</span><button class="link" data-act="addLog">Aggiungi</button></div>
+        <div class="list" id="logList"></div>
+      </div>
+    </section>
 
-const CHECKS=['Ha il badge cashback 5% (o c\'è un giorno con cashback maggiorato in arrivo)?',
-'Il prezzo è vicino al minimo Keepa? Se no, mettilo nel bot con /add e un obiettivo',
-'C\'è un coupon da spuntare nella scheda prodotto?',
-'È disponibile con Iscriviti e Risparmia (sconto extra sui ricorrenti)?',
-'Esiste in Seconda Mano (resi Amazon) a meno?',
-'Puoi usare il saldo cashback prima che scada?',
-'Ritiro al punto Amazon: c\'è un buono attivo?'];
+    <!-- PROMO -->
+    <section class="page" id="page-promo" aria-label="Promo">
+      <h1 class="page-title">Promo e scadenze</h1>
+      <div class="card">
+        <div class="card-h"><span>Da usare</span><button class="link" data-act="addPromo">Aggiungi</button></div>
+        <div class="list" id="promoList"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span>Usate o scadute</span></div>
+        <div class="list" id="promoOld"></div>
+      </div>
+    </section>
 
-function subCalc(s){const yr=s.price*12/Math.max(1,s.every);return{yr,save:yr*s.disc/100}}
-function logCalc(l){const deal=Math.max(0,l.normal-l.paid),cb=l.paid*l.cb/100;return{deal,cb,tot:deal+cb}}
+    <!-- OPZIONI -->
+    <section class="page" id="page-settings" aria-label="Opzioni">
+      <h1 class="page-title">Opzioni</h1>
+      <div class="card">
+        <div class="card-h"><span>Aspetto</span></div>
+        <div class="set-row"><span>Tema</span><div class="seg" id="themeSeg" role="group" aria-label="Tema"><button data-theme-set="auto">Auto</button><button data-theme-set="light">Chiaro</button><button data-theme-set="dark">Scuro</button></div></div>
+        <div class="set-row"><span>Vetro</span><div class="seg" id="glassSeg" role="group" aria-label="Vetro"><button data-glass-set="off">No</button><button data-glass-set="on">Statico</button><button data-glass-set="anim">Dinamico</button></div></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span>Prime Giovani e cashback</span></div>
+        <div class="field"><label for="primeEnd">Fine Prime Giovani</label><input type="date" id="primeEnd" data-set="primeEnd"></div>
+        <div class="grid2">
+          <div class="field"><label for="cbBal">Saldo cashback €</label><input type="number" inputmode="decimal" step="0.01" min="0" id="cbBal" data-set="cbBal"></div>
+          <div class="field"><label for="cbExp">Credito scade il</label><input type="date" id="cbExp" data-set="cbExp"></div>
+        </div>
+        <div class="field"><label for="cbCap">Tetto annuo cashback €</label><input type="number" inputmode="decimal" min="0" id="cbCap" data-set="cbCap" placeholder="dalle condizioni del cashback"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><span>Dati</span></div>
+        <p class="note">I dati restano solo in questo dispositivo. Fai un backup ogni tanto.</p>
+        <div class="btn-row"><button class="btn" data-act="copyBackup">Copia backup</button><button class="btn" data-act="downloadBackup">Scarica file</button></div>
+        <button class="btn block" data-act="importSheet">Importa backup</button>
+        <button class="btn danger block" data-act="wipe">Cancella tutti i dati</button>
+      </div>
+      <p class="note" style="text-align:center">Amazon Radar · i prezzi arrivano dal bot Telegram</p>
+    </section>
+  </main>
 
-function render(){
- $('sampleNote').hidden=!S.sample;
- $('yearLbl').textContent=`Risparmiato nel ${Y}`;
- const yl=S.log.filter(l=>l.date&&l.date.startsWith(String(Y)));
- let deal=0,cb=0; yl.forEach(l=>{const c=logCalc(l);deal+=c.deal;cb+=c.cb});
- const subSave=S.subs.reduce((a,s)=>a+subCalc(s).save,0), subYr=S.subs.reduce((a,s)=>a+subCalc(s).yr,0);
- $('ytd').textContent=eur(deal+cb); $('ytdDeal').textContent=eur(deal); $('ytdCb').textContent=eur(cb);
- $('ytdNote').textContent=`${yl.length} acquisti registrati · più ${eur(subSave)} l'anno da Iscriviti e Risparmia`;
+  <nav class="nav" aria-label="Sezioni">
+    <button data-act="go" data-page="home" class="active" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Home</button>
+    <button data-act="go" data-page="subs" aria-label="Iscrizioni"><svg viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/></svg>Iscrizioni</button>
+    <button data-act="go" data-page="log" aria-label="Acquisti"><svg viewBox="0 0 24 24"><path d="M5 3h14v18l-3-2-2 2-2-2-2 2-2-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Acquisti</button>
+    <button data-act="go" data-page="promo" aria-label="Promo"><svg viewBox="0 0 24 24"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Promo</button>
+    <button data-act="go" data-page="settings" aria-label="Opzioni"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 0 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 0 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 0 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 0 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Opzioni</button>
+  </nav>
+</div>
 
- const st=S.settings, strips=[];
- const de=days(st.cbExp);
- strips.push({k:'Saldo cashback',v:eur(st.cbBal),n:st.cbExp?(de<0?'Credito scaduto':`Scade tra ${de} giorni · ${fdate(st.cbExp)}`):'Imposta la scadenza del credito qui sotto',alarm:st.cbBal>0&&de!==null&&de<=14});
- if(st.cbCap>0){const used=Math.min(100,cb/st.cbCap*100);strips.push({k:`Tetto cashback ${Y}`,v:`${Math.round(used)}%`,n:`${eur(cb)} di ${eur(st.cbCap)}`,meter:used})}
- const dp=days(st.primeEnd);
- strips.push({k:'Prime Giovani',v:st.primeEnd?(dp<0?'Finito':`${dp} gg`):'—',n:st.primeEnd?`Fino al ${fdate(st.primeEnd)}: dopo perdi metà prezzo e cashback`:'Inserisci la data di fine qui sotto',alarm:dp!==null&&dp<=60});
- const next=S.promos.filter(p=>!p.done&&days(p.date)>=0).sort((a,b)=>a.date.localeCompare(b.date))[0];
- strips.push({k:'Prossima scadenza',v:next?`${days(next.date)} gg`:'—',n:next?next.name:'Nessuna promo attiva',alarm:next&&days(next.date)<=7});
- strips.push({k:'Iscriviti e Risparmia',v:eur(subSave),n:`risparmio annuo su ${eur(subYr)} di spesa ricorrente`});
- $('strips').innerHTML=strips.map(s=>`<div class="strip${s.alarm?' alarm':''}"><span class="k">${esc(s.k)}</span><span class="v">${esc(s.v)}</span>${s.meter!=null?`<span class="meter"><i style="width:${s.meter.toFixed(1)}%"></i></span>`:''}<span class="n">${esc(s.n)}</span></div>`).join('');
+<div class="sheet-wrap" id="sheetWrap" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="sheet" id="sheet"></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
 
- const pr=[...S.promos].sort((a,b)=>(a.done-b.done)||a.date.localeCompare(b.date));
- $('promoT').tBodies[0].innerHTML=pr.length?pr.map(p=>{const d=days(p.date);const tag=p.done?'<span class="tag">usata</span>':d<0?'<span class="tag">scaduta</span>':d<=7?`<span class="tag red">${d} gg</span>`:`<span class="tag">${d} gg</span>`;
-  return `<tr class="${p.done?'done':''}"><td>${esc(p.name)}</td><td style="white-space:nowrap">${fdate(p.date)} ${tag}</td><td>${esc(p.note)}</td><td><input type="checkbox" aria-label="Usata" data-done="${esc(p.id)}" ${p.done?'checked':''} style="width:22px;min-height:22px"></td><td><button class="x" aria-label="Elimina" data-del="promos:${esc(p.id)}">×</button></td></tr>`}).join(''):'<tr><td colspan="5" class="note">Nessuna promo. Aggiungi quelle che ricevi via email o in app.</td></tr>';
-
- $('subT').tBodies[0].innerHTML=S.subs.length?S.subs.map(s=>{const c=subCalc(s);const f=(k,step,min,max)=>`<input type="number" inputmode="decimal" step="${step}" min="${min}" max="${max}" value="${esc(s[k])}" data-sub="${esc(s.id)}:${k}" aria-label="${k}" style="text-align:right">`;
-  return `<tr><td>${esc(s.name)}</td><td class="num">${f('price','0.01',0,9999)}</td><td class="num">${f('disc','1',0,50)}</td><td class="num">${f('every','1',1,6)}</td><td class="num">${eur(c.yr)}</td><td class="num"><b>${eur(c.save)}</b></td><td><button class="x" aria-label="Elimina" data-del="subs:${esc(s.id)}">×</button></td></tr>`}).join(''):'<tr><td colspan="7" class="note">Nessuna iscrizione. Aggiungi i prodotti che ricevi periodicamente.</td></tr>';
- $('subSum').textContent=S.subs.length?`${S.subs.length} iscrizioni · ${eur(subSave)} risparmiati l'anno`:'';
-
- const lg=[...S.log].sort((a,b)=>b.date.localeCompare(a.date));
- $('logT').tBodies[0].innerHTML=lg.length?lg.map(l=>{const c=logCalc(l);return `<tr><td style="white-space:nowrap">${fdate(l.date)}</td><td>${esc(l.item)}</td><td class="num">${eur(l.paid)}</td><td class="num">${eur(l.normal)}</td><td class="num">${eur(c.cb)} (${esc(l.cb)}%)</td><td class="num"><b>${eur(c.tot)}</b></td><td><button class="x" aria-label="Elimina" data-del="log:${esc(l.id)}">×</button></td></tr>`}).join(''):'<tr><td colspan="7" class="note">Registra ogni acquisto fatto al prezzo giusto: il totale in alto si aggiorna.</td></tr>';
-
- $('chk').innerHTML=CHECKS.map((t,i)=>`<label><input type="checkbox" data-chk="${i}" ${S.checks[i]?'checked':''}><span>${esc(t)}</span></label>`).join('');
- for(const [id,k] of [['primeEnd','primeEnd'],['cbBal','cbBal'],['cbExp','cbExp'],['cbCap','cbCap']]){const el=$(id);if(document.activeElement!==el)el.value=st[k]||''}
- $('bk').value=JSON.stringify(S);
-}
-const commit=()=>{S.sample=false;save();render()};
-const num=id=>parseFloat($(id).value)||0;
-
-$('promoF').addEventListener('submit',e=>{e.preventDefault();S.promos.push({id:uid(),name:$('pN').value.trim(),date:$('pD').value,note:$('pNo').value.trim(),done:false});e.target.reset();commit()});
-$('subF').addEventListener('submit',e=>{e.preventDefault();S.subs.push({id:uid(),name:$('sN').value.trim(),price:num('sP'),disc:num('sD'),every:Math.max(1,num('sE'))});e.target.reset();$('sD').value=5;$('sE').value=1;commit()});
-$('logF').addEventListener('submit',e=>{e.preventDefault();S.log.push({id:uid(),date:$('lD').value,item:$('lI').value.trim(),paid:num('lP'),normal:Math.max(num('lN'),0),cb:parseFloat($('lC').value)||0});e.target.reset();$('lD').value=iso(today);commit()});
-$('lD').value=iso(today);
-
-document.addEventListener('click',e=>{const d=e.target.closest('[data-del]');if(!d)return;const [list,id]=d.dataset.del.split(':');S[list]=S[list].filter(x=>x.id!==id);commit()});
-document.addEventListener('change',e=>{const t=e.target;
- if(t.dataset.done){const p=S.promos.find(x=>x.id===t.dataset.done);if(p){p.done=t.checked;commit()}}
- else if(t.dataset.sub){const [id,k]=t.dataset.sub.split(':');const s=S.subs.find(x=>x.id===id);if(s){s[k]=Math.max(k==='every'?1:0,parseFloat(t.value)||0);commit()}}
- else if(t.dataset.chk!=null){S.checks[t.dataset.chk]=t.checked;save()}
- else if(['primeEnd','cbExp'].includes(t.id)){S.settings[t.id]=t.value;commit()}
- else if(['cbBal','cbCap'].includes(t.id)){S.settings[t.id]=parseFloat(t.value)||0;commit()}});
-$('resetChk').addEventListener('click',()=>{S.checks={};save();render()});
-$('clearSample').addEventListener('click',()=>{S=structuredClone(EMPTY);S.promos=SAMPLE.promos.slice(0,2).map(p=>({...p}));commit()});
-$('cp').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('bk').value);$('bkMsg').textContent='Copiato.'}catch(e){$('bk').select();$('bkMsg').textContent='Seleziona e copia a mano.'}});
-$('imp').addEventListener('click',()=>{try{const d=JSON.parse($('bk').value);if(!d.settings||!Array.isArray(d.log))throw 0;S={...structuredClone(EMPTY),...d,sample:false};commit();$('bkMsg').textContent='Importato.'}catch(e){$('bkMsg').textContent='Backup non valido.'}});
-render();
-}
-</script>
+<script src="./app.js?v=1"></script>
 </body>
 </html>

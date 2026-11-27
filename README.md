@@ -91,8 +91,11 @@ Dall'app Amazon: **Condividi → Telegram → Amazon Radar**. Il bot riconosce i
   ignora i messaggi di chiunque non sia la tua chat.
 - Rivendere in modo sistematico ciò che compri è attività commerciale (partita IVA).
 
-## Dashboard
+## App (dashboard)
 
-La dashboard è `index.html` nella cartella principale, pubblicata con GitHub Pages
-(Settings → Pages → Branch `main`, cartella `/ (root)`).
-I dati che inserisci restano nel tuo browser.
+`index.html` + `app.js` + `tokens.css` + `style.css`, pubblicata con GitHub Pages.
+Stesso design system di PinscherTrade (vedi `DESIGN.md`): tema Auto/Chiaro/Scuro, vetro statico o dinamico,
+barra in basso a capsula. Da Safari: **Condividi → Aggiungi alla schermata Home** per usarla come app.
+
+Pagine: Home (risparmio dell'anno, cashback, Prime Giovani, prezzi seguiti dal bot), Iscrizioni, Acquisti, Promo, Opzioni.
+I dati restano nel dispositivo; il backup si copia o si scarica da Opzioni.

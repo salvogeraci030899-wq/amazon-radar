@@ -1,0 +1,16 @@
+{
+  "name": "Amazon Radar",
+  "short_name": "Radar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "Risparmi su Amazon: cashback, Iscriviti e Risparmia, promo e prezzi seguiti dal bot",
+  "icons": [
+    { "src": "icons/icon-192.png?v=1", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png?v=1", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png?v=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
