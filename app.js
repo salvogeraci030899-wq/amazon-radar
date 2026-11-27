@@ -294,6 +294,21 @@
   // ---------- avvio ----------
   $('today').textContent = today.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
   applyTheme(); renderAll(); loadWatch();
+  // Link di importazione: #import=<dati in base64url>. I dati restano nel link (mai nel repository) e il link viene ripulito.
+  if ((location.hash || '').indexOf('#import=') === 0) {
+    var raw = location.hash.slice(8);
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+    try {
+      var b64 = raw.replace(/-/g, '+').replace(/_/g, '/'), bin = atob(b64), bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      var inc = JSON.parse(new TextDecoder().decode(bytes));
+      if (!inc || !inc.settings || !Array.isArray(inc.log)) throw 0;
+      var doImport = function () { localStorage.setItem(KEY, JSON.stringify(inc)); S = load(); save(); renderAll(); };
+      var hasData = S.subs.length || S.log.length || S.promos.length;
+      if (!hasData) { doImport(); toast('Dati importati'); }
+      else openSheet({ title: 'Importare i dati del link?', text: 'Sostituiscono iscrizioni, acquisti e promo che hai già in questo dispositivo.', ok: 'Importa', msg: 'Dati importati', fields: [], noFocus: true, save: doImport });
+    } catch (err) { toast('Link di importazione non valido'); }
+  }
   var start = (location.hash || '').slice(1);
   if (['subs', 'log', 'promo', 'settings'].indexOf(start) >= 0) go(start);
 })();
