@@ -93,7 +93,6 @@ Dall'app Amazon: **Condividi → Telegram → Amazon Radar**. Il bot riconosce i
 
 ## Dashboard
 
-La dashboard è in `docs/index.html`. Per pubblicarla con GitHub Pages:
-**Settings → Pages → Source: Deploy from a branch → Branch `main`, cartella `/docs` → Save**.
-Viene pubblicata solo la cartella `docs`, non bot e stato.
+La dashboard è `index.html` nella cartella principale, pubblicata con GitHub Pages
+(Settings → Pages → Branch `main`, cartella `/ (root)`).
 I dati che inserisci restano nel tuo browser.
