@@ -247,6 +247,18 @@
         if (isNew) S.promos.push(Object.assign({ id: uid() }, o)); else Object.assign(p, o); },
       onDelete: isNew ? null : function () { S.promos = S.promos.filter(function (x) { return x !== p; }); } });
   }
+  // Unisce acquisti senza doppioni: stesso numero d'ordine, oppure stessa data e stesso importo
+  function mergeLog(list) {
+    var n = 0;
+    list.forEach(function (x) {
+      if (!x || !x.date || typeof x.paid !== 'number') return;
+      var dup = S.log.some(function (l) { return (x.orderId && l.orderId === x.orderId) || (l.date === x.date && Math.abs((l.paid || 0) - x.paid) < 0.01); });
+      if (dup) return;
+      S.log.push({ id: uid(), orderId: x.orderId || '', date: x.date, item: String(x.item || 'Ordine Amazon').slice(0, 80), paid: x.paid, normal: Math.max(Number(x.normal) || 0, x.paid), cb: Number(x.cb) || 0 });
+      n++;
+    });
+    return n;
+  }
   function find(list, id) { return S[list].filter(function (x) { return x.id === id; })[0]; }
 
   // ---------- azioni ----------
@@ -316,8 +328,13 @@
     var file = this.files && this.files[0]; if (!file) return;
     var rd = new FileReader();
     rd.onload = function () {
-      try { var d = JSON.parse(rd.result); if (!d || !d.settings || !Array.isArray(d.log)) throw 0;
-        localStorage.setItem(KEY, JSON.stringify(d)); S = load(); save(); renderAll(); toast('Importati ' + S.log.length + ' acquisti');
+      try { var d = JSON.parse(rd.result);
+        if (d && d.type === 'ar-add' && Array.isArray(d.log)) {        // aggiornamento settimanale: aggiunge solo gli ordini nuovi
+          var added = mergeLog(d.log); save(); renderAll(); toast(added ? 'Aggiunti ' + added + ' acquisti nuovi' : 'Nessun acquisto nuovo');
+        } else {
+          if (!d || !d.settings || !Array.isArray(d.log)) throw 0;
+          localStorage.setItem(KEY, JSON.stringify(d)); S = load(); save(); renderAll(); toast('Importati ' + S.log.length + ' acquisti');
+        }
       } catch (e) { toast('File non valido'); }
       $('importFile').value = '';
     };
