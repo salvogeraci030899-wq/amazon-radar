@@ -26,8 +26,8 @@
   if (light) { document.getElementById('metaThemeColor').setAttribute('content', '#f2f2f7'); document.getElementById('metaStatusBar').setAttribute('content', 'default'); }
 })();
 </script>
-<link rel="stylesheet" href="./tokens.css?v=4">
-<link rel="stylesheet" href="./style.css?v=4">
+<link rel="stylesheet" href="./tokens.css?v=5">
+<link rel="stylesheet" href="./style.css?v=5">
 </head>
 <body>
 <div id="app">
@@ -134,7 +134,8 @@
         <div class="card-h"><span>Dati</span></div>
         <p class="note">I dati restano solo in questo dispositivo. Fai un backup ogni tanto.</p>
         <div class="btn-row"><button class="btn" data-act="copyBackup">Copia backup</button><button class="btn" data-act="downloadBackup">Scarica file</button></div>
-        <button class="btn block" data-act="importSheet">Importa backup</button>
+        <div class="btn-row"><button class="btn" data-act="importSheet">Incolla backup</button><button class="btn" data-act="importFile">Importa file</button></div>
+        <input type="file" id="importFile" accept=".json,application/json,text/plain" hidden>
         <button class="btn danger block" data-act="wipe">Cancella tutti i dati</button>
       </div>
       <p class="note" style="text-align:center">Amazon Radar · i prezzi arrivano dal bot Telegram</p>
@@ -155,6 +156,6 @@
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="./app.js?v=4"></script>
+<script src="./app.js?v=5"></script>
 </body>
 </html>

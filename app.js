@@ -295,6 +295,7 @@
     } else if (a === 'downloadBackup') {
       var blob = new Blob([backupText()], { type: 'application/json' }), u = URL.createObjectURL(blob), el = document.createElement('a');
       el.href = u; el.download = 'amazon-radar-' + iso(today) + '.json'; document.body.appendChild(el); el.click(); el.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 1000);
+    } else if (a === 'importFile') { $('importFile').click();
     } else if (a === 'importSheet') {
       openSheet({ title: 'Importa backup', msg: 'Importato', text: 'Incolla il testo del backup. Sostituisce i dati attuali.', ok: 'Importa', fields: [{ key: 'json', label: 'Backup', type: 'textarea', ph: '{"settings":…}' }],
         save: function (v) {
@@ -309,6 +310,17 @@
     var t = e.target;
     if (t.dataset.chk != null) { S.checks[t.dataset.chk] = t.checked; save(); $('checkCount').textContent = CHECKS.filter(function (c, i) { return S.checks[i]; }).length + '/' + CHECKS.length; }
     else if (t.dataset.set) { var k = t.dataset.set; S.settings[k] = (k === 'cbBal' || k === 'cbCap') ? num(t.value) : t.value; save(); renderHome(); }
+  });
+  $('importFile').addEventListener('change', function () {
+    var file = this.files && this.files[0]; if (!file) return;
+    var rd = new FileReader();
+    rd.onload = function () {
+      try { var d = JSON.parse(rd.result); if (!d || !d.settings || !Array.isArray(d.log)) throw 0;
+        localStorage.setItem(KEY, JSON.stringify(d)); S = load(); save(); renderAll(); toast('Importati ' + S.log.length + ' acquisti');
+      } catch (e) { toast('File non valido'); }
+      $('importFile').value = '';
+    };
+    rd.readAsText(file);
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
 
