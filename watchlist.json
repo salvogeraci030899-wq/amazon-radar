@@ -1,0 +1,8 @@
+{
+  "items": {},
+  "settings": {
+    "calo_vs_media90": 25,
+    "ripeti_dopo_ore": 24,
+    "sospetto_errore": 50
+  }
+}
