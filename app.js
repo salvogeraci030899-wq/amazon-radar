@@ -73,6 +73,7 @@
         (x.meter != null ? '<span class="meter" aria-label="Tetto cashback usato"><i style="width:' + x.meter.toFixed(1) + '%"></i></span>' : '') + '</button>';
     }).join('');
 
+    $('checkCount').textContent = CHECKS.filter(function (c, i) { return S.checks[i]; }).length + '/' + CHECKS.length;
     $('checks').innerHTML = CHECKS.map(function (c, i) {
       return '<label class="check"><input type="checkbox" data-chk="' + i + '"' + (S.checks[i] ? ' checked' : '') + '><i></i><span>' + esc(c) + '</span></label>';
     }).join('');
@@ -125,6 +126,7 @@
     var th = pref('ar_theme', 'auto'), gl = pref('ar_glass', 'off');
     document.querySelectorAll('[data-theme-set]').forEach(function (b) { b.classList.toggle('active', b.dataset.themeSet === th); });
     document.querySelectorAll('[data-glass-set]').forEach(function (b) { b.classList.toggle('active', b.dataset.glassSet === gl); });
+    renderAccents();
   }
 
   // ---------- prezzi seguiti dal bot (watchlist.json pubblicato con la pagina) ----------
@@ -148,6 +150,22 @@
 
   function renderAll() { renderHome(); renderSubs(); renderLog(); renderPromo(); renderSettings(); }
 
+  // ---------- colori tema ----------
+  var ACCENTS = [['orange', 'Arancio', '#ff9f0a'], ['blue', 'Blu', '#0a84ff'], ['teal', 'Azzurro', '#64d2ff'], ['purple', 'Viola', '#bf5af2'], ['pink', 'Rosa', '#ff375f'], ['yellow', 'Giallo', '#ffd60a']];
+  function renderAccents() {
+    var cur = pref('ar_accent', 'orange');
+    $('accentSw').innerHTML = ACCENTS.map(function (x) {
+      return '<button class="swatch' + (x[0] === cur ? ' active' : '') + '" style="--c:' + x[2] + '" data-accent-set="' + x[0] + '" aria-label="' + x[1] + '" aria-pressed="' + (x[0] === cur) + '"></button>';
+    }).join('');
+  }
+  // ---------- schede comprimibili (chiuse di base, la scelta resta) ----------
+  function applyFolds() {
+    ['foldWatch', 'foldChecks'].forEach(function (id) {
+      var open = pref('ar_' + id, '0') === '1', el = $(id);
+      el.classList.toggle('open', open); el.querySelector('.fold-h').setAttribute('aria-expanded', open);
+    });
+  }
+
   // ---------- tema e vetro ----------
   function pref(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } }
   function setPref(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
@@ -157,6 +175,7 @@
     document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
     $('metaThemeColor').setAttribute('content', light ? '#f2f2f7' : '#000000');
     $('metaStatusBar').setAttribute('content', light ? 'default' : 'black-translucent');
+    document.documentElement.setAttribute('data-accent', pref('ar_accent', 'orange'));
     var g = pref('ar_glass', 'off'), c = document.documentElement.classList;
     c.toggle('glass', g === 'on' || g === 'anim'); c.toggle('glass-anim', g === 'anim');
   }
@@ -239,9 +258,10 @@
   function backupText() { return JSON.stringify(S); }
 
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-act],[data-theme-set],[data-glass-set],[data-seg] button');
+    var t = e.target.closest('[data-act],[data-theme-set],[data-glass-set],[data-accent-set],[data-seg] button');
     if (!t) { if (e.target === $('sheetWrap')) closeSheet(); return; }
     if (t.dataset.themeSet) { setPref('ar_theme', t.dataset.themeSet); applyTheme(); renderSettings(); return; }
+    if (t.dataset.accentSet) { setPref('ar_accent', t.dataset.accentSet); applyTheme(); renderSettings(); return; }
     if (t.dataset.glassSet) { setPref('ar_glass', t.dataset.glassSet); applyTheme(); renderSettings(); return; }
     if (t.parentNode && t.parentNode.dataset && t.parentNode.dataset.seg) { t.parentNode.querySelectorAll('button').forEach(function (b) { b.classList.toggle('active', b === t); }); return; }
     var a = t.dataset.act;
@@ -257,6 +277,7 @@
       if (sheetSave.save(readSheet()) === false) { toast('Compila i campi richiesti'); return; }
       var msg = sheetSave.msg; closeSheet(); save(); renderAll(); if (msg !== '') toast(msg || 'Salvato');
     } else if (a === 'sheetDelete' && sheetSave) { sheetSave.onDelete(); closeSheet(); save(); renderAll(); toast('Eliminato'); }
+    else if (a === 'fold') { var id = t.dataset.fold; setPref('ar_' + id, $(id).classList.contains('open') ? '0' : '1'); applyFolds(); }
     else if (a === 'watchAll') { renderWatch.all = !renderWatch.all; renderWatch(renderWatch.last); }
     else if (a === 'resetChecks') { S.checks = {}; save(); renderHome(); }
     else if (a === 'watch') {
@@ -286,7 +307,7 @@
   });
   document.addEventListener('change', function (e) {
     var t = e.target;
-    if (t.dataset.chk != null) { S.checks[t.dataset.chk] = t.checked; save(); }
+    if (t.dataset.chk != null) { S.checks[t.dataset.chk] = t.checked; save(); $('checkCount').textContent = CHECKS.filter(function (c, i) { return S.checks[i]; }).length + '/' + CHECKS.length; }
     else if (t.dataset.set) { var k = t.dataset.set; S.settings[k] = (k === 'cbBal' || k === 'cbCap') ? num(t.value) : t.value; save(); renderHome(); }
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
@@ -300,7 +321,7 @@
 
   // ---------- avvio ----------
   $('today').textContent = today.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
-  applyTheme(); renderAll(); loadWatch();
+  applyTheme(); applyFolds(); renderAll(); loadWatch();
   // Link di importazione: #import=<dati in base64url>. I dati restano nel link (mai nel repository) e il link viene ripulito.
   if ((location.hash || '').indexOf('#import=') === 0) {
     var raw = location.hash.slice(8);

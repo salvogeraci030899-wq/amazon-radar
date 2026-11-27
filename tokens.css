@@ -73,3 +73,15 @@ html[data-theme="light"] {
     --danger-soft: color-mix(in srgb, var(--danger) 15%, transparent);
     --warning-soft: color-mix(in srgb, var(--warning) 15%, transparent);
 }
+
+/* Colori tema (Opzioni → Aspetto → Colore). Arancio è il predefinito, definito sopra. */
+html[data-accent="blue"] { --ui: #0a84ff; --ui-soft: color-mix(in srgb, #0a84ff 16%, transparent); --on-ui: #000000; }
+html[data-accent="blue"][data-theme="light"] { --ui: #0066cc; --ui-soft: color-mix(in srgb, #0066cc 12%, transparent); --on-ui: #ffffff; }
+html[data-accent="teal"] { --ui: #64d2ff; --ui-soft: color-mix(in srgb, #64d2ff 16%, transparent); --on-ui: #000000; }
+html[data-accent="teal"][data-theme="light"] { --ui: #00749e; --ui-soft: color-mix(in srgb, #00749e 12%, transparent); --on-ui: #ffffff; }
+html[data-accent="purple"] { --ui: #bf5af2; --ui-soft: color-mix(in srgb, #bf5af2 16%, transparent); --on-ui: #000000; }
+html[data-accent="purple"][data-theme="light"] { --ui: #8944ab; --ui-soft: color-mix(in srgb, #8944ab 12%, transparent); --on-ui: #ffffff; }
+html[data-accent="pink"] { --ui: #ff375f; --ui-soft: color-mix(in srgb, #ff375f 16%, transparent); --on-ui: #000000; }
+html[data-accent="pink"][data-theme="light"] { --ui: #c8163f; --ui-soft: color-mix(in srgb, #c8163f 12%, transparent); --on-ui: #ffffff; }
+html[data-accent="yellow"] { --ui: #ffd60a; --ui-soft: color-mix(in srgb, #ffd60a 16%, transparent); --on-ui: #000000; }
+html[data-accent="yellow"][data-theme="light"] { --ui: #8a6100; --ui-soft: color-mix(in srgb, #8a6100 12%, transparent); --on-ui: #ffffff; }

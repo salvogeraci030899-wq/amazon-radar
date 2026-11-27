@@ -19,7 +19,7 @@ a { color: var(--ui); text-decoration: none; }
 .brand-mark { width: 28px; height: 28px; border-radius: var(--r-sm); background: var(--ui); display: grid; place-items: center; color: var(--on-ui); }
 .brand-mark svg { width: 18px; height: 18px; }
 .topbar-sub { font-size: var(--fs-md); color: var(--text-secondary); font-weight: var(--fw-medium); }
-main { padding: 0 var(--page-gutter) calc(var(--nav-h) + var(--safe-bottom) + var(--sp-7)); max-width: 640px; margin: 0 auto; }
+main { padding: 0 var(--page-gutter) calc(var(--nav-h) + var(--safe-bottom) + var(--sp-6)); max-width: 640px; margin: 0 auto; }
 .page { display: none; flex-direction: column; gap: var(--sp-4); }
 .page.active { display: flex; }
 .page-title { font-size: var(--fs-xl); font-weight: var(--fw-black); margin: var(--sp-2) 0 0; letter-spacing: -0.3px; }
@@ -47,6 +47,22 @@ main { padding: 0 var(--page-gutter) calc(var(--nav-h) + var(--safe-bottom) + va
 .tile.alert .tile-v { color: var(--danger); }
 .meter { height: 4px; border-radius: var(--r-pill); background: var(--surface-hover); overflow: hidden; margin-top: var(--sp-2); }
 .meter i { display: block; height: 100%; background: var(--ui); border-radius: var(--r-pill); }
+
+/* --- Schede comprimibili --- */
+.fold-h { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3); width: 100%; min-height: var(--touch-min); margin: calc(var(--sp-2) * -1) 0;
+    background: none; border: 0; padding: 0; cursor: pointer; color: var(--text-muted); font-size: var(--fs-sm); font-weight: var(--fw-bold); text-transform: uppercase; letter-spacing: 0.5px; text-align: left; }
+.fold-h .fold-r { display: flex; align-items: center; gap: var(--sp-3); }
+.fold-h svg { width: 16px; height: 16px; fill: none; stroke: var(--text-secondary); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--dur) var(--ease); }
+.fold.open .fold-h svg { transform: rotate(180deg); }
+.fold-b { display: none; flex-direction: column; gap: var(--sp-3); }
+.fold.open .fold-b { display: flex; }
+.fold:not(.open) { padding-top: var(--sp-3); padding-bottom: var(--sp-3); }
+
+/* --- Campioni colore --- */
+.swatches { display: flex; gap: var(--sp-3); flex-wrap: wrap; justify-content: flex-end; }
+.swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid transparent; padding: 0; cursor: pointer; position: relative; background: var(--c); box-shadow: inset 0 0 0 2px var(--surface); }
+.swatch::after { content: ''; position: absolute; inset: -7px; }
+.swatch.active { border-color: var(--text); }
 
 /* --- Righe di elenco --- */
 .list { display: flex; flex-direction: column; }

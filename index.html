@@ -15,8 +15,9 @@
 <script>
 // Tema e vetro applicati prima del primo disegno, senza lampi (logica completa in app.js)
 (function () {
-  var pref = 'auto', g = 'off';
-  try { pref = localStorage.getItem('ar_theme') || 'auto'; g = localStorage.getItem('ar_glass') || 'off'; } catch (e) {}
+  var pref = 'auto', g = 'off', ac = 'orange';
+  try { pref = localStorage.getItem('ar_theme') || 'auto'; g = localStorage.getItem('ar_glass') || 'off'; ac = localStorage.getItem('ar_accent') || 'orange'; } catch (e) {}
+  document.documentElement.setAttribute('data-accent', ac);
   var light = pref === 'light' || (pref === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
   var d = document.documentElement;
   d.setAttribute('data-theme', light ? 'light' : 'dark');
@@ -25,8 +26,8 @@
   if (light) { document.getElementById('metaThemeColor').setAttribute('content', '#f2f2f7'); document.getElementById('metaStatusBar').setAttribute('content', 'default'); }
 })();
 </script>
-<link rel="stylesheet" href="./tokens.css?v=3">
-<link rel="stylesheet" href="./style.css?v=3">
+<link rel="stylesheet" href="./tokens.css?v=4">
+<link rel="stylesheet" href="./style.css?v=4">
 </head>
 <body>
 <div id="app">
@@ -53,14 +54,19 @@
         </div>
       </div>
       <div class="tiles" id="tiles"></div>
-      <div class="card">
-        <div class="card-h"><span>Prezzi seguiti dal bot</span><span class="badge" id="watchCount">—</span></div>
-        <div class="list" id="watchList"></div>
-        <p class="note" id="watchNote">Tocca un prodotto per aprirlo su Amazon o su Keepa, dove puoi attivare l'avviso gratuito.</p>
+      <div class="card fold" id="foldWatch">
+        <button class="fold-h" data-act="fold" data-fold="foldWatch" aria-expanded="false" aria-controls="foldWatchB"><span>Prezzi seguiti dal bot</span><span class="fold-r"><span class="badge" id="watchCount">—</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button>
+        <div class="fold-b" id="foldWatchB">
+          <div class="list" id="watchList"></div>
+          <p class="note">Tocca un prodotto per aprirlo su Amazon o su Keepa, dove puoi attivare l'avviso gratuito.</p>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-h"><span>Prima di comprare</span><button class="link" data-act="resetChecks">Azzera</button></div>
-        <div id="checks"></div>
+      <div class="card fold" id="foldChecks">
+        <button class="fold-h" data-act="fold" data-fold="foldChecks" aria-expanded="false" aria-controls="foldChecksB"><span>Prima di comprare</span><span class="fold-r"><span class="badge" id="checkCount">0/6</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></span></button>
+        <div class="fold-b" id="foldChecksB">
+          <div id="checks"></div>
+          <button class="btn block" data-act="resetChecks">Azzera</button>
+        </div>
       </div>
     </section>
 
@@ -112,6 +118,7 @@
       <div class="card">
         <div class="card-h"><span>Aspetto</span></div>
         <div class="set-row"><span>Tema</span><div class="seg" id="themeSeg" role="group" aria-label="Tema"><button data-theme-set="auto">Auto</button><button data-theme-set="light">Chiaro</button><button data-theme-set="dark">Scuro</button></div></div>
+        <div class="set-row"><span>Colore</span><div class="swatches" id="accentSw" role="group" aria-label="Colore del tema"></div></div>
         <div class="set-row"><span>Vetro</span><div class="seg" id="glassSeg" role="group" aria-label="Vetro"><button data-glass-set="off">No</button><button data-glass-set="on">Statico</button><button data-glass-set="anim">Dinamico</button></div></div>
       </div>
       <div class="card">
@@ -148,6 +155,6 @@
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="./app.js?v=3"></script>
+<script src="./app.js?v=4"></script>
 </body>
 </html>
