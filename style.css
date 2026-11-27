@@ -1,5 +1,7 @@
 /* Amazon Radar — componenti. Solo token di tokens.css. */
 * { box-sizing: border-box; min-width: 0; -webkit-tap-highlight-color: transparent; }
+html { background: var(--bg); }
+html.glass { background: var(--wall-solid); }
 html, body { overscroll-behavior: none; touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body, button, .row, .tile, .card, .nav { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
@@ -173,7 +175,8 @@ html.glass[data-theme="light"] { --surface: rgba(255, 255, 255, 0.66); --surface
             radial-gradient(65% 45% at 20% 100%, color-mix(in srgb, rgb(191 90 242) 16%, transparent), transparent 70%), var(--wall-solid); }
 html.glass body { background: var(--wall-solid); }
 html.glass #app { background: var(--wall); background-attachment: fixed; }
-html.glass .topbar { background: transparent; }
+html.glass .topbar { background: linear-gradient(to bottom, var(--wall-solid) 0, var(--wall-solid) var(--safe-top), color-mix(in srgb, var(--wall-solid) 92%, transparent) 100%);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
 html.glass .card, html.glass .tile, html.glass .nav, html.glass .icon-btn { box-shadow: var(--glass-light); }
 html.glass .card, html.glass .nav, html.glass .sheet { -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
 html.glass .sheet { background: color-mix(in srgb, var(--wall-solid) 72%, transparent); }

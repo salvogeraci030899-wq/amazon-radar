@@ -173,11 +173,12 @@
     var p = pref('ar_theme', 'auto');
     var light = p === 'light' || (p === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: light)').matches);
     document.documentElement.setAttribute('data-theme', light ? 'light' : 'dark');
-    $('metaThemeColor').setAttribute('content', light ? '#f2f2f7' : '#000000');
-    $('metaStatusBar').setAttribute('content', light ? 'default' : 'black-translucent');
     document.documentElement.setAttribute('data-accent', pref('ar_accent', 'orange'));
-    var g = pref('ar_glass', 'off'), c = document.documentElement.classList;
-    c.toggle('glass', g === 'on' || g === 'anim'); c.toggle('glass-anim', g === 'anim');
+    var g = pref('ar_glass', 'off'), c = document.documentElement.classList, glass = g === 'on' || g === 'anim';
+    c.toggle('glass', glass); c.toggle('glass-anim', g === 'anim');
+    // la barra di stato prende il colore della parte alta della pagina
+    $('metaThemeColor').setAttribute('content', light ? (glass ? '#eef0f6' : '#f2f2f7') : '#000000');
+    $('metaStatusBar').setAttribute('content', light ? 'default' : 'black-translucent');
   }
   if (window.matchMedia) { try { matchMedia('(prefers-color-scheme: light)').addEventListener('change', applyTheme); } catch (e) {} }
 

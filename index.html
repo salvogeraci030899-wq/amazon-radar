@@ -23,11 +23,14 @@
   d.setAttribute('data-theme', light ? 'light' : 'dark');
   if (g === 'on' || g === 'anim') d.classList.add('glass');
   if (g === 'anim') d.classList.add('glass-anim');
-  if (light) { document.getElementById('metaThemeColor').setAttribute('content', '#f2f2f7'); document.getElementById('metaStatusBar').setAttribute('content', 'default'); }
+  // Barra di stato: stesso colore della parte alta della pagina (in vetro, il fondo pieno del vetro)
+  var glass = g === 'on' || g === 'anim';
+  document.getElementById('metaThemeColor').setAttribute('content', light ? (glass ? '#eef0f6' : '#f2f2f7') : '#000000');
+  document.getElementById('metaStatusBar').setAttribute('content', light ? 'default' : 'black-translucent');
 })();
 </script>
-<link rel="stylesheet" href="./tokens.css?v=5">
-<link rel="stylesheet" href="./style.css?v=5">
+<link rel="stylesheet" href="./tokens.css?v=6">
+<link rel="stylesheet" href="./style.css?v=6">
 </head>
 <body>
 <div id="app">
@@ -156,6 +159,6 @@
 </div>
 <div class="toast" id="toast" role="status"></div>
 
-<script src="./app.js?v=5"></script>
+<script src="./app.js?v=6"></script>
 </body>
 </html>
