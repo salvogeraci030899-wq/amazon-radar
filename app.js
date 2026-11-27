@@ -291,6 +291,13 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeSheet(); });
 
+  // ---------- niente zoom, niente selezione involontaria ----------
+  ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (ev) { document.addEventListener(ev, function (e) { e.preventDefault(); }, { passive: false }); });
+  document.addEventListener('touchmove', function (e) { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
+  document.addEventListener('contextmenu', function (e) { if (!e.target.closest('input,textarea')) e.preventDefault(); });
+  // la finestra dal basso blocca lo scorrimento della pagina sotto
+  new MutationObserver(function () { document.body.style.overflow = $('sheetWrap').classList.contains('open') ? 'hidden' : ''; }).observe($('sheetWrap'), { attributes: true, attributeFilter: ['class'] });
+
   // ---------- avvio ----------
   $('today').textContent = today.toLocaleDateString('it-IT', { weekday: 'short', day: 'numeric', month: 'short' });
   applyTheme(); renderAll(); loadWatch();
